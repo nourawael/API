@@ -5,6 +5,7 @@ namespace Store.Web
     {
         public static void Main(string[] args)
         {
+            Console.WriteLine("Dev");
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
