@@ -18,7 +18,7 @@ namespace Store.Repository
             {
                 if (context.ProductBrands != null && !context.ProductBrands.Any()) 
                 {
-                    var brandsData = File.ReadAllText("../Store.Repository/SeedData/brands.js");
+                    var brandsData = File.ReadAllText("../Store.Repository/SeedData/brands.json");
                     var brands = JsonSerializer.Deserialize<List<ProductBrand>>(brandsData);
 
                     if (brands is not null)
@@ -27,7 +27,7 @@ namespace Store.Repository
 
                 if (context.ProductTypes != null && !context.ProductTypes.Any())
                 {
-                    var typesData = File.ReadAllText("../Store.Repository/SeedData/types.js");
+                    var typesData = File.ReadAllText("../Store.Repository/SeedData/types.json");
                     var types = JsonSerializer.Deserialize<List<ProductType>>(typesData);
 
                     if (types is not null)
@@ -36,7 +36,7 @@ namespace Store.Repository
 
                 if (context.Products != null && !context.Products.Any())
                 {
-                    var productsData = File.ReadAllText("../Store.Repository/SeedData/products.js");
+                    var productsData = File.ReadAllText("../Store.Repository/SeedData/products.json");
                     var products = JsonSerializer.Deserialize<List<Product>>(productsData);
 
                     if (products is not null)
