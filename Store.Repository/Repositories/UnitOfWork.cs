@@ -36,7 +36,7 @@ namespace Store.Repository.Repositories
 
                 _repositories.Add(entityKey,repositoryInstance);
             }
-            return (IGenericRepository<TEntity, Tkey>)_repositories[entityKey]
+            return (IGenericRepository<TEntity, Tkey>)_repositories[entityKey];
         }
     }
 }
