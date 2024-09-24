@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Store.Service.Services.Product.Dtos
+namespace Store.Service.Services.ProductServices.Dtos
 {
     public class BrandTypeDetialsDto
     {
