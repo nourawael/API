@@ -52,6 +52,6 @@ namespace Store.Repository.Repositories
             => await ApplySpecification(specs).FirstOrDefaultAsync();
 
         private IQueryable<TEntity> ApplySpecification(ISpecification<TEntity> specs)
-            => SpecificationEvaluator<TEntity, Tkey>.GetQuery(_context.Set<TEntity>(), specs)
+            => SpecificationEvaluator<TEntity, Tkey>.GetQuery(_context.Set<TEntity>(), specs);
     }
 }
