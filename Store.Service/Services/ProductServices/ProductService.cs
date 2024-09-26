@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Store.Repository.Specification.ProductSpec;
 
 namespace Store.Service.ProductServices
 {
@@ -30,9 +31,10 @@ namespace Store.Service.ProductServices
             return mappedBrands;
         }
 
-        public async Task<IReadOnlyList<ProductDetailsDto>> GetAllProductsAsync()
+        public async Task<IReadOnlyList<ProductDetailsDto>> GetAllProductsAsync(ProductSpecification input)
         {
-            var products = await _unitOfWork.Repository<ProductEntity, int>().GetAllAsNoTrackingAsync();
+            var specs = new  ProductWithSpecification(input);
+            var products = await _unitOfWork.Repository<ProductEntity, int>().GetAllWithSpecificationAsync(specs);
 
             var mappedProducts = _mapper.Map<IReadOnlyList<ProductDetailsDto>>(products);
             return mappedProducts;
