@@ -8,6 +8,7 @@ using Store.Repository.Repositories;
 using Store.Service.HandleResponses;
 using Store.Service.ProductServices;
 using Store.Service.Services.ProductServices.Dtos;
+using Store.Web.Extensions;
 using Store.Web.Helper;
 using Store.Web.Middleware;
 
@@ -28,29 +29,7 @@ namespace Store.Web
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddScoped<IProductService, ProductService>();
-            builder.Services.AddAutoMapper(typeof(ProductProfile));
-
-            builder.Services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.InvalidModelStateResponseFactory = actionConext =>
-                {
-                    var errors = actionConext.ModelState
-                    .Where(model => model.Value?.Errors.Count >0)
-                    .SelectMany(model=> model.Value?.Errors)
-                    .Select(error=> error.ErrorMessage)
-                    .ToList();
-
-                    var errorResponse = new ValidationErrorResponse
-                    {
-                        Errors = errors
-                    };
-
-                    return new BadRequestObjectResult(errorResponse);
-                    
-                };
-            });
+            builder.Services.AddApplicationServices();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
