@@ -46,9 +46,32 @@ namespace Store.Service.Services.UserService
             
         }
 
-        public Task<UserDto> Register(RegisterDto input)
+        public async Task<UserDto> Register(RegisterDto input)
         {
-            throw new NotImplementedException();
+            var user = await _userManager.FindByEmailAsync(input.Email);
+
+            if (user is not null)
+                return null;
+
+            var appuser = new AppUser 
+            {
+                DipslayName = input.DisplayName,
+                Email=input.Email,
+                UserName=input.DisplayName,
+            };
+
+            var result = await _userManager.CreateAsync(appuser, input.Password);
+
+            if (!result.Succeeded)
+                throw new Exception(result.Errors.Select(x=> x.Description).FirstOrDefault());
+
+            return new UserDto
+            {
+                Id = Guid.Parse(appuser.Id),
+                DisplayName = appuser.DipslayName,
+                Email = appuser.Email,
+                Token = _tokenService.GenerateToken(appuser)
+            };
         }
     }
 }
