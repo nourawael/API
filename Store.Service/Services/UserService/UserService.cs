@@ -73,5 +73,8 @@ namespace Store.Service.Services.UserService
                 Token = _tokenService.GenerateToken(appuser)
             };
         }
+
+        
+       
     }
 }
