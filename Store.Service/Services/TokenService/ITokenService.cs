@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Store.Service.TokenService
+namespace Store.Service.Services.TokenService
 {
     public interface ITokenService
     {
