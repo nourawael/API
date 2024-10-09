@@ -1,11 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Store.Repository.Basket;
 using Store.Repository.Interfaces;
 using Store.Repository.Repositories;
 using Store.Service.HandleResponses;
 using Store.Service.ProductServices;
+using Store.Service.Services.BasketService;
+using Store.Service.Services.BasketService.Dtos;
 using Store.Service.Services.CacheService;
 using Store.Service.Services.ProductServices.Dtos;
-
+using Store.Service.Services.TokenService;
+using Store.Service.Services.UserService;
 namespace Store.Web.Extensions
 {
     public static class ApplicationServiceExtension
@@ -15,7 +19,12 @@ namespace Store.Web.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ICacheService, CacheService>();
+            services.AddScoped<IBasketService,BasketService>();
+            services.AddScoped<IBasketRepository, BasketRepository>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddAutoMapper(typeof(ProductProfile));
+            services.AddAutoMapper(typeof(BasketProfile));
 
             services.Configure<ApiBehaviorOptions>(options =>
             {
