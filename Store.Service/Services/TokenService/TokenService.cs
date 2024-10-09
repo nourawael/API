@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Store.Service.TokenService
+namespace Store.Service.Services.TokenService
 {
     public class TokenService : ITokenService
     {
@@ -23,7 +23,7 @@ namespace Store.Service.TokenService
         }
         public string GenerateToken(AppUser appUser)
         {
-            var claims = new List<Claim> 
+            var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, appUser.Email),
                 new Claim(ClaimTypes.GivenName, appUser.DipslayName),
@@ -33,13 +33,13 @@ namespace Store.Service.TokenService
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);
 
-            var tokenDescriptor = new SecurityTokenDescriptor 
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject= new ClaimsIdentity(claims),
-                Issuer= _configuration["Token:Issuer"],
-                IssuedAt= DateTime.Now,
-                Expires= DateTime.Now.AddDays(1),
-                SigningCredentials= creds
+                Subject = new ClaimsIdentity(claims),
+                Issuer = _configuration["Token:Issuer"],
+                IssuedAt = DateTime.Now,
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = creds
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
