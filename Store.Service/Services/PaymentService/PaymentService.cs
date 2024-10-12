@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Store.Data.Entities;
+using Store.Data.Entities.OrderEntities;
 using Store.Repository.Repositories;
+using Store.Repository.Specification.OrderSpecs;
 using Store.Service.Services.BasketService;
 using Store.Service.Services.BasketService.Dtos;
 using Store.Service.Services.OrderService.Dtos;
@@ -19,14 +22,17 @@ namespace Store.Service.Services.PaymentService
         private readonly IConfiguration _configuration;
         private readonly UnitOfWork _unitOfWork;
         private readonly IBasketService _basketService;
+        private readonly IMapper _mapper;
 
         public PaymentService(IConfiguration configuration,
             UnitOfWork unitOfWork,
-            IBasketService basketService)
+            IBasketService basketService,
+            IMapper mapper)
         {
             _configuration = configuration;
             _unitOfWork = unitOfWork;
             _basketService = basketService;
+            _mapper = mapper;
         }
         public async Task<CustomerBasketDto> CreateOrUpdatePaymentIntent(CustomerBasketDto input)
         {
@@ -84,14 +90,44 @@ namespace Store.Service.Services.PaymentService
             return input;
         }
 
-        public Task<OrderDetailsDto> UpdateOrderPaymentFailed(string paymentIntentId)
+        public async Task<OrderDetailsDto> UpdateOrderPaymentFailed(string paymentIntentId)
         {
-            throw new NotImplementedException();
+            var specs = new OrderWithPaymentIntentSpecificaion(paymentIntentId);
+
+            var order = await _unitOfWork.Repository<Order,Guid>().GetWithSpecificationByIdAsync(specs);
+
+            if (order is null)
+                throw new Exception("Order does not exist");
+
+            order.OrderPayment = OrderPaymentStatus.Faild;
+
+            _unitOfWork.Repository<Order, Guid>().Update(order);
+
+            await _unitOfWork.CompleteAsync();
+
+            var mappedOrder = _mapper.Map<OrderDetailsDto>(order);
+            return mappedOrder;
         }
 
-        public Task<OrderDetailsDto> UpdateOrderPaymentSucceded(string paymentIntentId)
+        public async Task<OrderDetailsDto> UpdateOrderPaymentSucceded(string paymentIntentId)
         {
-            throw new NotImplementedException();
+            var specs = new OrderWithPaymentIntentSpecificaion(paymentIntentId);
+
+            var order = await _unitOfWork.Repository<Order, Guid>().GetWithSpecificationByIdAsync(specs);
+
+            if (order is null)
+                throw new Exception("Order does not exist");
+
+            order.OrderPayment = OrderPaymentStatus.Recieved;
+
+            _unitOfWork.Repository<Order, Guid>().Update(order);
+
+            await _unitOfWork.CompleteAsync();
+
+            await _basketService.DeleteBasketAsync(order.BasketId);
+
+            var mappedOrder = _mapper.Map<OrderDetailsDto>(order);
+            return mappedOrder;
         }
     }
 }
