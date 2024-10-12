@@ -14,7 +14,7 @@ namespace Store.Service.Services.OrderService
 
         Task<IReadOnlyList<OrderDetailsDto>> GetAllOrdersForUserAsync(string buyeremail);
 
-        Task<OrderDetailsDto> CreateOrderByIdAsync(Guid id);
+        Task<OrderDetailsDto> GetOrderByIdAsync(Guid id);
 
         Task<IReadOnlyList<DeliveryMethod>> GetAllDeliveryMethodsAsync();
 
