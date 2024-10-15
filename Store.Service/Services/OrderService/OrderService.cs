@@ -129,7 +129,7 @@ namespace Store.Service.Services.OrderService
 
             var orders = await _unitOfWork.Repository<Order, Guid>().GetAllWithSpecificationAsync(specs);
 
-            if (!orders.Any())
+            if (orders is { Count: <= 0})
                 throw new Exception("You Do not have any Orders yet!");
 
             var mappedOrders = _mapper.Map<List<OrderDetailsDto>>(orders);
@@ -144,7 +144,7 @@ namespace Store.Service.Services.OrderService
             var order = await _unitOfWork.Repository<Order, Guid>().GetAllWithSpecificationAsync(specs);
 
             if (order is null)
-                throw new Exception("this order is not found");
+                throw new Exception("This order is not found");
 
             var mappedOrder = _mapper.Map<OrderDetailsDto>(order);
 
