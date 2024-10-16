@@ -109,13 +109,20 @@ namespace Store.Service.Services.OrderService
                 SubTotal= subtotal,
                 PaymentIntentId = basket.PaymentIntentId
             };
-            await _unitOfWork.Repository<Order, Guid>().AddAsync(order);
-            
-            await _unitOfWork.CompleteAsync();
+            try
+            {
+                await _unitOfWork.Repository<Order, Guid>().AddAsync(order);
 
-            var mappedOrder = _mapper.Map<OrderDetailsDto>(order);
+                await _unitOfWork.CompleteAsync();
 
-            return mappedOrder;
+                var mappedOrder = _mapper.Map<OrderDetailsDto>(order);
+
+                return mappedOrder;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
             #endregion
 
         }
